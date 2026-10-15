@@ -96,6 +96,15 @@
               <span>Scan QR Code on PC</span>
             </button>
 
+            <!-- Camera QR Scanner Viewport (Appears above pairing code, replacing scan button) -->
+            <div class="qr-camera-viewport" id="qrScannerBox" style="display: none;">
+              <div class="qr-camera-header">
+                <span>Align camera with PC screen</span>
+                <button class="text-action-btn" id="btnCloseScanner">Cancel</button>
+              </div>
+              <div id="qrReader" class="qr-render-area"></div>
+            </div>
+
             <div class="subtle-divider">
               <span>or enter pairing code</span>
             </div>
@@ -105,15 +114,6 @@
                 maxlength="12">
               <button class="pill-btn-secondary" id="btnSubmitManualCode">Connect</button>
             </div>
-          </div>
-
-          <!-- Camera QR Scanner Viewport -->
-          <div class="qr-camera-viewport" id="qrScannerBox" style="display: none;">
-            <div class="qr-camera-header">
-              <span>Align camera with PC screen</span>
-              <button class="text-action-btn" id="btnCloseScanner">Cancel</button>
-            </div>
-            <div id="qrReader" class="qr-render-area"></div>
           </div>
 
         </div>
