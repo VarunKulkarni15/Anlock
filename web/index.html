@@ -3,250 +3,283 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#070a0f">
+  <meta name="theme-color" content="#f4f5f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Anlock — Liquid Biometric PC Unlock</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Anlock — PC Biometric Unlock</title>
   
+  <!-- Cal Sans font (Bold Headings) + Inter (Clean Minimal Subtext) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cal-sans@5.0.0/index.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- HTML5 QR Code Scanner -->
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <!-- Ambient Liquid Lights in Background -->
-  <div class="ambient-canvas">
-    <div class="liquid-orb orb-primary" id="orb1"></div>
-    <div class="liquid-orb orb-secondary" id="orb2"></div>
-    <div class="liquid-orb orb-ambient" id="orb3"></div>
-    <div class="mesh-grid"></div>
-  </div>
-
-  <!-- Main View Container -->
-  <div class="app-viewport">
-    <!-- Top Navigation Bar -->
-    <header class="liquid-nav">
-      <div class="nav-brand">
-        <div class="brand-liquid-glyph">
-          <div class="glyph-core">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="3" ry="3"></rect>
-              <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
-            </svg>
-          </div>
-          <span class="glyph-glow"></span>
+  <div class="app-layout">
+    
+    <!-- Top Header -->
+    <header class="top-nav">
+      <div class="brand-group">
+        <div class="brand-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="3" ry="3"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
         </div>
-        <div class="brand-text">
-          <span class="brand-name">Anlock</span>
-          <span class="brand-version">v1.0 • E2EE</span>
+        <div class="brand-meta">
+          <span class="brand-title">Anlock</span>
+          <span class="brand-subtitle">Biometric Gateway</span>
         </div>
       </div>
 
-      <div class="nav-controls">
-        <div class="status-pill" id="cloudStatusPill">
-          <span class="status-dot"></span>
-          <span class="status-label">Cloud Relay</span>
-          <span class="status-ping">16ms</span>
+      <div class="nav-right">
+        <div class="status-chip" id="relayStatusChip">
+          <span class="status-indicator" id="statusIndicator"></span>
+          <span class="status-caption" id="statusCaption">Cloud Ready</span>
         </div>
-        <button class="icon-liquid-btn" id="btnToggleSettings" title="Connection Settings" aria-label="Settings">
+        <button class="icon-circle-btn" id="btnOpenSettings" aria-label="Settings">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
         </button>
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="main-flow">
-      
-      <!-- Target Device Card (Liquid Glass Plate) -->
-      <section class="liquid-card device-card" id="deviceCard">
-        <div class="card-specular-edge"></div>
-        <div class="card-body">
-          <div class="device-meta">
-            <div class="device-icon-wrapper">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Main Content Flow -->
+    <main class="content-flow">
+
+      <!-- ==========================================
+           STATE A: UNPAIRED (Clean Onboarding)
+           ========================================== -->
+      <section class="state-container" id="viewUnpaired">
+        
+        <div class="soft-card hero-onboarding-card">
+          <div class="onboarding-icon-wrap">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+          </div>
+          
+          <h1 class="card-heading">Pair Your Windows PC</h1>
+          <p class="card-description">Link this mobile device with Anlock Desktop to unlock Windows with your phone fingerprint, face, or PIN.</p>
+
+          <div class="onboarding-actions">
+            <button class="capsule-primary-btn" id="btnStartScan">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                <rect x="7" y="7" width="10" height="10" rx="1"></rect>
+              </svg>
+              <span>Scan QR Code on PC</span>
+            </button>
+
+            <div class="subtle-divider">
+              <span>or enter pairing code</span>
+            </div>
+
+            <div class="input-action-row">
+              <input type="text" class="soft-input" id="inputManualCode" placeholder="Enter 6-digit code" maxlength="12">
+              <button class="pill-btn-secondary" id="btnSubmitManualCode">Connect</button>
+            </div>
+          </div>
+
+          <!-- Camera QR Scanner Viewport -->
+          <div class="qr-camera-viewport" id="qrScannerBox" style="display: none;">
+            <div class="qr-camera-header">
+              <span>Align camera with PC screen</span>
+              <button class="text-action-btn" id="btnCloseScanner">Cancel</button>
+            </div>
+            <div id="qrReader" class="qr-render-area"></div>
+          </div>
+
+        </div>
+
+        <div class="soft-card info-banner-card">
+          <div class="info-bullet-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="info-bullet-text">
+            <strong>Zero-Knowledge Security</strong>
+            <span>Your Windows password remains encrypted on your PC. Your phone only holds the private decryption key.</span>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==========================================
+           STATE B: PAIRED & ACTIVE
+           ========================================== -->
+      <section class="state-container" id="viewPaired" style="display: none;">
+
+        <!-- Device Info Card -->
+        <div class="soft-card device-status-card">
+          <div class="device-meta-left">
+            <div class="device-symbol">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="8" y1="21" x2="16" y2="21"></line>
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
-              <span class="pulse-indicator"></span>
             </div>
-            <div class="device-details">
+            <div class="device-text-block">
               <div class="device-title-row">
-                <h2 class="device-name" id="deviceName">Varun’s Windows Laptop</h2>
-                <span class="device-loc-tag" id="deviceLocation">Bengaluru • Online</span>
+                <h2 class="card-heading small" id="pairedDeviceName">Windows PC</h2>
+                <span class="status-badge-active">Online</span>
               </div>
-              <div class="device-sub-row">
-                <span class="device-os">Windows 11 Pro</span>
-                <span class="dot-sep">•</span>
-                <span class="auth-event-badge" id="eventBadge">Lock Screen Prompt</span>
-              </div>
+              <p class="card-subtext" id="pairedUserText">Account: Administrator • Cloud Relay</p>
             </div>
           </div>
+        </div>
 
-          <!-- Private Zero-Knowledge Hash Token View -->
-          <div class="security-chip-bar">
-            <div class="chip-label">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <!-- Inbound Unlock Request Alert (Dynamic) -->
+        <div class="request-alert-card" id="unlockPromptBanner">
+          <div class="alert-pulse-dot"></div>
+          <div class="alert-content">
+            <h3 class="alert-title" id="promptTitle">Unlock Requested</h3>
+            <p class="alert-sub" id="promptSub">Windows is awaiting your confirmation.</p>
+          </div>
+        </div>
+
+        <!-- Central Biometric Verification Card -->
+        <div class="soft-card auth-action-card">
+          <div class="auth-icon-badge">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path d="m9 12 2 2 4-4"></path>
+            </svg>
+          </div>
+
+          <div class="auth-text-center">
+            <h3 class="card-heading" id="authStatusTitle">Ready to Authenticate</h3>
+            <p class="card-description" id="authStatusDesc">Use your phone's fingerprint sensor (power button or screen), face, or PIN to confirm.</p>
+          </div>
+
+          <button class="capsule-primary-btn full-width" id="btnTriggerAuth">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Authenticate & Unlock PC</span>
+          </button>
+        </div>
+
+        <!-- Quick Controls Grid -->
+        <div class="quick-controls-grid">
+          <button class="soft-card control-item" id="btnRemoteLock">
+            <div class="control-icon-circle danger">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-              <span>Zero-Knowledge Channel</span>
             </div>
-            <code class="chip-hash" id="sessionHashDisplay">#e2ee:9f48...d2c1</code>
-          </div>
-        </div>
-      </section>
+            <div class="control-label-group">
+              <span class="control-title">Lock PC</span>
+              <span class="control-sub">Instant lock</span>
+            </div>
+          </button>
 
-      <!-- Biometric Scanner Core -->
-      <section class="biometric-zone">
-        <div class="scanner-container">
-          <!-- Fluid Optical Rings -->
-          <div class="liquid-ripple-ring ring-3"></div>
-          <div class="liquid-ripple-ring ring-2"></div>
-          <div class="liquid-ripple-ring ring-1"></div>
-
-          <!-- Glass Refraction Orb Button -->
-          <button class="liquid-sensor-btn" id="sensorButton" aria-label="Touch to Unlock PC">
-            <div class="sensor-specular-light"></div>
-            <div class="sensor-inner-liquid"></div>
-            
-            <div class="sensor-glyph" id="sensorGlyph">
-              <!-- Fingerprint SVG with fluid path animation -->
-              <svg class="fingerprint-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"></path>
-                <path d="M14 13.12c0 2.38 0 6.38-1 8.88"></path>
-                <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"></path>
-                <path d="M2 12a10 10 0 0 1 18-6"></path>
-                <path d="M2 16h.01"></path>
-                <path d="M21.8 16c.2-2 .131-5.354 0-6"></path>
-                <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"></path>
-                <path d="M8.65 22c.21-.66.45-1.32.57-2"></path>
-                <path d="M9 6.8a6 6 0 0 1 9 5.2v2"></path>
+          <button class="soft-card control-item" id="btnTestUnlock">
+            <div class="control-icon-circle">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
               </svg>
             </div>
-
-            <!-- Success Checkmark (Hidden until unlocked) -->
-            <div class="sensor-success-glyph" id="successGlyph">
-              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 6L9 17l-5-5"></path>
-              </svg>
+            <div class="control-label-group">
+              <span class="control-title">Ping PC</span>
+              <span class="control-sub">Test latency</span>
             </div>
           </button>
         </div>
 
-        <!-- Dynamic Scanner State Text -->
-        <div class="scanner-status-box">
-          <h3 class="status-heading" id="statusHeading">Ready to Unlock</h3>
-          <p class="status-subtext" id="statusSubtext">Tap or scan fingerprint to release password key</p>
-        </div>
-      </section>
-
-      <!-- Action & Remote Controls -->
-      <section class="controls-grid">
-        <button class="liquid-action-btn primary-action" id="btnUnlockManual">
-          <div class="btn-sheen"></div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Authorize Unlock</span>
-        </button>
-
-        <button class="liquid-action-btn remote-lock-action" id="btnRemoteLock" title="Remotely lock the PC in Bengaluru">
-          <div class="btn-sheen"></div>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-          <span>Lock PC Remotely</span>
-        </button>
-      </section>
-
-      <!-- E2EE Cryptographic Telemetry Drawer -->
-      <section class="liquid-card telemetry-card">
-        <div class="card-specular-edge"></div>
-        <div class="telemetry-header" id="telemetryHeader">
-          <div class="telemetry-title">
-            <span class="telemetry-dot"></span>
-            <span>Zero-Knowledge Telemetry</span>
+        <!-- Telemetry Log -->
+        <div class="soft-card telemetry-card">
+          <div class="telemetry-bar" id="telemetryToggle">
+            <span class="telemetry-title">Security Activity</span>
+            <span class="telemetry-hint">Live ▾</span>
           </div>
-          <span class="telemetry-toggle-hint">Live Log ▾</span>
-        </div>
-        <div class="telemetry-content" id="telemetryContent">
-          <div class="log-stream" id="logStream">
-            <div class="log-row info">
-              <span class="log-time">[08:14:02]</span>
-              <span class="log-msg">Cloud relay session established via Supabase WebSockets</span>
-            </div>
-            <div class="log-row cipher">
-              <span class="log-time">[08:14:03]</span>
-              <span class="log-msg">E2EE Handshake key: AES-256-GCM authenticated</span>
-            </div>
-            <div class="log-row ok">
-              <span class="log-time">[08:14:05]</span>
-              <span class="log-msg">Target: "Varun's Windows Laptop" (IP routed via Cloud)</span>
+          <div class="telemetry-container" id="telemetryBody">
+            <div class="telemetry-stream" id="telemetryLogs">
+              <div class="log-entry">
+                <span class="log-t">[Ready]</span>
+                <span class="log-m">End-to-End Encrypted Session Active</span>
+              </div>
             </div>
           </div>
         </div>
+
       </section>
 
     </main>
 
-    <!-- Settings & Pairing Modal -->
-    <div class="liquid-modal" id="settingsModal">
-      <div class="modal-backdrop" id="modalBackdrop"></div>
-      <div class="modal-card">
-        <div class="card-specular-edge"></div>
-        <div class="modal-header">
-          <h3 class="modal-title">Connection & Security</h3>
-          <button class="icon-liquid-btn close-btn" id="btnCloseSettings">✕</button>
+    <!-- Floating Tactile Liquid Glass Dock (Matching Iconly Reference Images 1, 2, 3, 4) -->
+    <nav class="floating-glass-dock" id="floatingDock">
+      <button class="dock-nav-item active" id="dockBtnHome" aria-label="Home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        </svg>
+        <span class="dock-label">Home</span>
+      </button>
+
+      <!-- Center Hero Tactile Action Capsule -->
+      <button class="dock-hero-capsule" id="dockBtnAuth" aria-label="Unlock PC">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </button>
+
+      <button class="dock-nav-item" id="dockBtnSettings" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span class="dock-label">Settings</span>
+      </button>
+    </nav>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop-layer" id="settingsModal">
+      <div class="soft-card modal-container">
+        <div class="modal-header-row">
+          <h3 class="card-heading small">Settings & Pairing</h3>
+          <button class="icon-close-btn" id="btnCloseSettings">✕</button>
         </div>
-        
-        <div class="modal-body">
-          <div class="setting-item">
-            <label class="setting-label">Connection Mode</label>
-            <div class="mode-selector">
-              <button class="mode-chip active" data-mode="cloud">
-                <span class="mode-dot"></span> Cloud Relay (Free)
-              </button>
-              <button class="mode-chip" data-mode="local">
-                <span class="mode-dot"></span> Local Wi-Fi (UDP)
-              </button>
-              <button class="mode-chip" data-mode="bluetooth">
-                <span class="mode-dot"></span> Bluetooth Direct
-              </button>
-            </div>
+
+        <div class="modal-fields">
+          <div class="field-item">
+            <label class="field-label">Cloud Signaling Server</label>
+            <input type="text" class="soft-input readonly-input" id="cfgSupabaseUrl" value="https://eudpfmvpgjottroiesoc.supabase.co" readonly>
+            <span class="field-help">Connected via Supabase Realtime WebSocket relay.</span>
           </div>
 
-          <div class="setting-item">
-            <label class="setting-label">Supabase Cloud Signaling</label>
-            <input type="text" class="liquid-input" id="cfgSupabaseUrl" value="https://eudpfmvpgjottroiesoc.supabase.co">
+          <div class="field-item">
+            <label class="field-label">Paired Device ID</label>
+            <input type="text" class="soft-input readonly-input mono-font" id="cfgDeviceId" value="Not Paired" readonly>
           </div>
 
-          <div class="setting-item">
-            <label class="setting-label">Zero-Knowledge Private Key Hash</label>
-            <input type="text" class="liquid-input" id="cfgKeyHash" readonly value="8f9a7c41e06d2139b4f73a5e8c1092b7">
-          </div>
-
-          <div class="setting-note">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="16" x2="12" y2="12"></line>
-              <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <span>Password keys never leave the phone unencrypted. Cloud servers cannot read your credentials.</span>
+          <div class="modal-btn-row">
+            <button class="pill-btn-danger" id="btnUnpairDevice">Unpair Device</button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Toast Notification Banner -->
-    <div class="toast-notification" id="toastNotification">
-      <span class="toast-icon">✓</span>
-      <span class="toast-text" id="toastText">Action completed</span>
+    <!-- Toast Notification -->
+    <div class="toast-capsule" id="toastPopup">
+      <span class="toast-text-msg" id="toastMsg">Notification</span>
     </div>
 
   </div>
