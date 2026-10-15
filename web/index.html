@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#f4f5f7">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Anlock — PC Biometric Unlock</title>
-  
+
   <!-- Cal Sans font (Bold Headings) + Inter (Clean Minimal Subtext) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cal-sans@5.0.0/index.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
   <!-- HTML5 QR Code Scanner -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
   <div class="app-layout">
-    
+
     <!-- Top Header -->
     <header class="top-nav">
       <div class="brand-group">
         <div class="brand-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="3" ry="3"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
@@ -44,8 +50,11 @@
           <span class="status-caption" id="statusCaption">Cloud Ready</span>
         </div>
         <button class="icon-circle-btn" id="btnOpenSettings" aria-label="Settings">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+            </path>
             <circle cx="12" cy="12" r="3"></circle>
           </svg>
         </button>
@@ -59,22 +68,25 @@
            STATE A: UNPAIRED (Clean Onboarding)
            ========================================== -->
       <section class="state-container" id="viewUnpaired">
-        
+
         <div class="soft-card hero-onboarding-card">
           <div class="onboarding-icon-wrap">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
               <line x1="8" y1="21" x2="16" y2="21"></line>
               <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
           </div>
-          
+
           <h1 class="card-heading">Pair Your Windows PC</h1>
-          <p class="card-description">Link this mobile device with Anlock Desktop to unlock Windows with your phone fingerprint, face, or PIN.</p>
+          <p class="card-description">Link this mobile device with Anlock Desktop to unlock Windows with your phone
+            fingerprint, face, or PIN.</p>
 
           <div class="onboarding-actions">
             <button class="capsule-primary-btn" id="btnStartScan">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
                 <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
                 <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
@@ -89,7 +101,8 @@
             </div>
 
             <div class="input-action-row">
-              <input type="text" class="soft-input" id="inputManualCode" placeholder="Enter 6-digit code" maxlength="12">
+              <input type="text" class="soft-input" id="inputManualCode" placeholder="Enter 6-digit code"
+                maxlength="12">
               <button class="pill-btn-secondary" id="btnSubmitManualCode">Connect</button>
             </div>
           </div>
@@ -113,7 +126,8 @@
           </div>
           <div class="info-bullet-text">
             <strong>Zero-Knowledge Security</strong>
-            <span>Your Windows password remains encrypted on your PC. Your phone only holds the private decryption key.</span>
+            <span>Your Windows password remains encrypted on your PC. Your phone only holds the private decryption
+              key.</span>
           </div>
         </div>
 
@@ -157,7 +171,8 @@
         <!-- Central Biometric Verification Card -->
         <div class="soft-card auth-action-card">
           <div class="auth-icon-badge">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
               <path d="m9 12 2 2 4-4"></path>
             </svg>
@@ -165,11 +180,13 @@
 
           <div class="auth-text-center">
             <h3 class="card-heading" id="authStatusTitle">Ready to Authenticate</h3>
-            <p class="card-description" id="authStatusDesc">Use your phone's fingerprint sensor (power button or screen), face, or PIN to confirm.</p>
+            <p class="card-description" id="authStatusDesc">Use your phone's fingerprint sensor (power button or
+              screen), face, or PIN to confirm.</p>
           </div>
 
           <button class="capsule-primary-btn full-width" id="btnTriggerAuth">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
             <span>Authenticate & Unlock PC</span>
@@ -225,30 +242,49 @@
 
     </main>
 
-    <!-- Floating Tactile Liquid Glass Dock (Matching Iconly Reference Images 1, 2, 3, 4) -->
-    <nav class="floating-glass-dock" id="floatingDock">
-      <button class="dock-nav-item active" id="dockBtnHome" aria-label="Home">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-        </svg>
-        <span class="dock-label">Home</span>
-      </button>
+    <!-- Interactive Glow Studio (Positioned to the right of the mobile card) -->
+    <aside class="glow-studio-panel" id="glowStudioPanel">
+      <div class="studio-card">
+        <div class="studio-header">
+          <div class="studio-title-row">
+            <span class="studio-dot"></span>
+            <span class="studio-title">Glow Studio</span>
+          </div>
+          <span class="studio-val-pill" id="glowValPill">40%</span>
+        </div>
 
-      <!-- Center Hero Tactile Action Capsule -->
-      <button class="dock-hero-capsule" id="dockBtnAuth" aria-label="Unlock PC">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </button>
+        <div class="slider-field">
+          <div class="slider-meta">
+            <span class="slider-name">Glow Intensity</span>
+            <span class="slider-num" id="intensityNum">0.40</span>
+          </div>
+          <input type="range" id="glowIntensitySlider" min="0" max="100" value="40" class="tactile-slider">
+        </div>
 
-      <button class="dock-nav-item" id="dockBtnSettings" aria-label="Settings">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="3"></circle>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-        </svg>
-        <span class="dock-label">Settings</span>
-      </button>
-    </nav>
+        <div class="slider-field">
+          <div class="slider-meta">
+            <span class="slider-name">Blur Radius</span>
+            <span class="slider-num" id="blurNum">28px</span>
+          </div>
+          <input type="range" id="glowBlurSlider" min="0" max="60" value="28" class="tactile-slider">
+        </div>
+
+        <div class="slider-field">
+          <div class="slider-meta">
+            <span class="slider-name">Elevation (Y)</span>
+            <span class="slider-num" id="elevationNum">12px</span>
+          </div>
+          <input type="range" id="glowElevationSlider" min="0" max="30" value="12" class="tactile-slider">
+        </div>
+
+        <div class="preset-buttons-row">
+          <button class="preset-btn" data-intensity="18" data-blur="16" data-y="8">Subtle</button>
+          <button class="preset-btn active" data-intensity="40" data-blur="28" data-y="12">Balanced</button>
+          <button class="preset-btn" data-intensity="65" data-blur="38" data-y="16">Vivid</button>
+          <button class="preset-btn" data-intensity="90" data-blur="48" data-y="20">Intense</button>
+        </div>
+      </div>
+    </aside>
 
     <!-- Settings Modal -->
     <div class="modal-backdrop-layer" id="settingsModal">
@@ -261,7 +297,8 @@
         <div class="modal-fields">
           <div class="field-item">
             <label class="field-label">Cloud Signaling Server</label>
-            <input type="text" class="soft-input readonly-input" id="cfgSupabaseUrl" value="https://eudpfmvpgjottroiesoc.supabase.co" readonly>
+            <input type="text" class="soft-input readonly-input" id="cfgSupabaseUrl"
+              value="https://eudpfmvpgjottroiesoc.supabase.co" readonly>
             <span class="field-help">Connected via Supabase Realtime WebSocket relay.</span>
           </div>
 
@@ -286,4 +323,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

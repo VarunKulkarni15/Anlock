@@ -65,6 +65,7 @@ window.addEventListener('DOMContentLoaded', () => {
   loadPairedDevice();
   initSupabaseWebSocket();
   setupUIEvents();
+  initGlowStudio();
   registerServiceWorker();
   logTelemetry('Anlock core engine started.');
 });
@@ -452,16 +453,6 @@ function setupUIEvents() {
   ui.btnRemoteLock.addEventListener('click', executeRemoteLock);
   ui.btnTestUnlock.addEventListener('click', executeTestUnlock);
 
-  // Floating Glass Dock Actions (Iconly Style)
-  const dockBtnAuth = document.getElementById('dockBtnAuth');
-  if (dockBtnAuth) dockBtnAuth.addEventListener('click', performBiometricAuth);
-  
-  const dockBtnSettings = document.getElementById('dockBtnSettings');
-  if (dockBtnSettings) dockBtnSettings.addEventListener('click', () => ui.settingsModal.classList.add('open'));
-  
-  const dockBtnHome = document.getElementById('dockBtnHome');
-  if (dockBtnHome) dockBtnHome.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
   // Settings Modal
   ui.btnOpenSettings.addEventListener('click', () => ui.settingsModal.classList.add('open'));
   ui.btnCloseSettings.addEventListener('click', closeSettingsModal);
@@ -471,6 +462,73 @@ function setupUIEvents() {
   ui.telemetryToggle.addEventListener('click', () => {
     const current = ui.telemetryBody.style.display;
     ui.telemetryBody.style.display = current === 'none' ? 'block' : 'none';
+  });
+}
+
+// ==========================================================================
+// 7. INTERACTIVE GLOW STUDIO TUNER
+// ==========================================================================
+function initGlowStudio() {
+  const intensitySlider = document.getElementById('glowIntensitySlider');
+  const blurSlider = document.getElementById('glowBlurSlider');
+  const elevationSlider = document.getElementById('glowElevationSlider');
+  const intensityNum = document.getElementById('intensityNum');
+  const blurNum = document.getElementById('blurNum');
+  const elevationNum = document.getElementById('elevationNum');
+  const glowValPill = document.getElementById('glowValPill');
+  const presetBtns = document.querySelectorAll('.preset-btn');
+
+  function updateGlow(intensityPercent, blurPx, yPx) {
+    const opacity = (intensityPercent / 100).toFixed(2);
+    document.documentElement.style.setProperty('--glow-intensity', opacity);
+    document.documentElement.style.setProperty('--glow-blur', blurPx + 'px');
+    document.documentElement.style.setProperty('--glow-y', yPx + 'px');
+
+    if (intensityNum) intensityNum.textContent = opacity;
+    if (blurNum) blurNum.textContent = blurPx + 'px';
+    if (elevationNum) elevationNum.textContent = yPx + 'px';
+    if (glowValPill) glowValPill.textContent = intensityPercent + '%';
+
+    presetBtns.forEach(btn => {
+      const bInt = parseInt(btn.dataset.intensity, 10);
+      if (Math.abs(bInt - intensityPercent) < 5) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  if (intensitySlider) {
+    intensitySlider.addEventListener('input', (e) => {
+      updateGlow(parseInt(e.target.value, 10), parseInt(blurSlider.value, 10), parseInt(elevationSlider.value, 10));
+    });
+  }
+
+  if (blurSlider) {
+    blurSlider.addEventListener('input', (e) => {
+      updateGlow(parseInt(intensitySlider.value, 10), parseInt(e.target.value, 10), parseInt(elevationSlider.value, 10));
+    });
+  }
+
+  if (elevationSlider) {
+    elevationSlider.addEventListener('input', (e) => {
+      updateGlow(parseInt(intensitySlider.value, 10), parseInt(blurSlider.value, 10), parseInt(e.target.value, 10));
+    });
+  }
+
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const bInt = parseInt(e.currentTarget.dataset.intensity, 10);
+      const bBlur = parseInt(e.currentTarget.dataset.blur, 10);
+      const bY = parseInt(e.currentTarget.dataset.y, 10);
+
+      if (intensitySlider) intensitySlider.value = bInt;
+      if (blurSlider) blurSlider.value = bBlur;
+      if (elevationSlider) elevationSlider.value = bY;
+
+      updateGlow(bInt, bBlur, bY);
+    });
   });
 }
 

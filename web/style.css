@@ -28,19 +28,24 @@
   --text-muted: #6B7280;
   --text-dim: #9CA3AF;
 
-  /* Primary Accent: 3D Royal Cobalt (Alternative to Purple from Image 1) */
+  /* Primary Accent: 3D Royal Cobalt (Tactile Capsule) */
   --accent-gradient: linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%);
   --accent-solid: #2563EB;
   --accent-light: #EFF6FF;
   --accent-border: #BFDBFE;
-  --accent-bloom: 0 14px 28px -4px rgba(37, 99, 235, 0.38),
-                  0 4px 10px -2px rgba(37, 99, 235, 0.2);
+  
+  /* Dynamic 3D Glow Bloom System */
+  --glow-intensity: 0.40;
+  --glow-blur: 28px;
+  --glow-spread: -4px;
+  --glow-y: 12px;
+  --glow-color: 37, 99, 235;
+  --accent-bloom: 0 var(--glow-y) var(--glow-blur) var(--glow-spread) rgba(var(--glow-color), var(--glow-intensity)),
+                  0 4px 12px -2px rgba(var(--glow-color), calc(var(--glow-intensity) * 0.75));
 
   /* Soft Diffuse Shadows (Iconly Reference Style) */
   --shadow-card: 0 12px 30px -4px rgba(0, 0, 0, 0.04),
                  0 2px 8px -2px rgba(0, 0, 0, 0.02);
-  --shadow-dock: 0 20px 40px -8px rgba(0, 0, 0, 0.08),
-                 0 0 1px rgba(0, 0, 0, 0.12);
   --shadow-tactile-btn: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
                         inset 0 -2px 3px 0 rgba(0, 0, 0, 0.2);
 
@@ -77,7 +82,7 @@ html, body {
   max-width: 430px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px 18px 110px 18px; /* space for bottom floating dock */
+  padding: 20px 18px 32px 18px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -659,72 +664,158 @@ html, body {
 }
 
 /* ==========================================================================
-   FLOATING TACTILE LIQUID GLASS DOCK (Signature Element from Images 1 & 4)
+   GLOW STUDIO PANEL (Positioned to the Right of the Mobile Card)
    ========================================================================== */
-.floating-glass-dock {
+.glow-studio-panel {
   position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: calc(50% + 245px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 250px;
   z-index: 90;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow-dock);
 }
 
-.dock-nav-item {
+.studio-card {
+  background: #FFFFFF;
+  border-radius: 22px;
+  border: var(--border-card);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.02);
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  background: transparent;
-  border: none;
-  color: var(--text-dim);
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 14px;
-  transition: all 0.2s ease;
+  gap: 14px;
 }
 
-.dock-nav-item.active, .dock-nav-item:hover {
+.studio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.studio-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.studio-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+}
+
+.studio-title {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--text-main);
 }
 
-.dock-label {
-  font-size: 0.68rem;
+.studio-val-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-solid);
+  background: var(--accent-light);
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+}
+
+.slider-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.slider-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+}
+
+.slider-name {
+  color: var(--text-muted);
   font-weight: 500;
 }
 
-/* Center Tactile Capsule (Matching Image 1's Signature Pill Button) */
-.dock-hero-capsule {
-  width: 58px;
-  height: 38px;
-  border-radius: 16px;
-  background: var(--accent-gradient);
-  color: #FFFFFF;
-  border: none;
+.slider-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.tactile-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #E2E8F0;
+  outline: none;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-tactile-btn), var(--accent-bloom);
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
-.dock-hero-capsule:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-tactile-btn), 0 16px 30px -4px rgba(37, 99, 235, 0.45);
+.tactile-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-solid);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+  cursor: pointer;
+  transition: transform 0.12s ease;
 }
 
-.dock-hero-capsule:active {
-  transform: scale(0.95);
+.tactile-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.preset-buttons-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.preset-btn {
+  padding: 6px 0;
+  border-radius: 8px;
+  background: var(--bg-inset);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.preset-btn:hover {
+  background: #E2E8F0;
+  color: var(--text-main);
+}
+
+.preset-btn.active {
+  background: var(--accent-light);
+  border-color: var(--accent-border);
+  color: var(--accent-solid);
+}
+
+/* Fallback position for smaller screen sizes */
+@media (max-width: 1024px) {
+  .glow-studio-panel {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 430px;
+    margin: 12px auto 0 auto;
+  }
 }
 
 /* ==========================================================================
