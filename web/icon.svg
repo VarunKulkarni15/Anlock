@@ -5,12 +5,12 @@
       <stop offset="100%" stop-color="#EFF1F5"/>
     </linearGradient>
     <linearGradient id="cobaltGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
+      <stop offset="0%" stop-color="#8DA9C3"/>
+      <stop offset="100%" stop-color="#487299"/>
     </linearGradient>
     <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.08"/>
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#2563EB" flood-opacity="0.12"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#6F92B3" flood-opacity="0.15"/>
     </filter>
   </defs>
 
@@ -24,7 +24,7 @@
   <g transform="translate(136, 116)">
     <!-- Shackle -->
     <path d="M44 130 V80 C44 35.8 79.8 0 120 0 C160.2 0 196 35.8 196 80 V130" 
-          fill="none" stroke="#2563EB" stroke-width="26" stroke-linecap="round"/>
+          fill="none" stroke="#6F92B3" stroke-width="26" stroke-linecap="round"/>
     
     <!-- Lock Base -->
     <rect x="16" y="116" width="208" height="156" rx="36" fill="url(#cobaltGrad)"/>

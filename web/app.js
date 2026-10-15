@@ -27,9 +27,9 @@ const state = {
 const ui = {
   viewUnpaired: document.getElementById('viewUnpaired'),
   viewPaired: document.getElementById('viewPaired'),
-  relayPill: document.getElementById('relayPill'),
-  relayDot: document.getElementById('relayDot'),
-  relayText: document.getElementById('relayText'),
+  relayPill: document.getElementById('relayStatusChip'),
+  relayDot: document.getElementById('statusIndicator'),
+  relayText: document.getElementById('statusCaption'),
   btnStartScan: document.getElementById('btnStartScan'),
   qrScannerBox: document.getElementById('qrScannerBox'),
   btnCloseScanner: document.getElementById('btnCloseScanner'),
@@ -62,10 +62,10 @@ const ui = {
 // 1. INITIALIZATION & LIFECYCLE
 // ==========================================================================
 window.addEventListener('DOMContentLoaded', () => {
-  loadPairedDevice();
-  initSupabaseWebSocket();
-  setupUIEvents();
-  registerServiceWorker();
+  try { loadPairedDevice(); } catch (e) { console.error('loadPairedDevice err:', e); }
+  try { initSupabaseWebSocket(); } catch (e) { console.error('initSupabaseWebSocket err:', e); }
+  try { setupUIEvents(); } catch (e) { console.error('setupUIEvents err:', e); }
+  try { registerServiceWorker(); } catch (e) { console.error('SW err:', e); }
   logTelemetry('Anlock core engine started.');
 });
 
@@ -471,8 +471,12 @@ function closeSettingsModal() {
 }
 
 function updateRelayStatus(isOnline, text) {
-  ui.relayDot.className = 'pill-dot ' + (isOnline ? '' : 'offline');
-  ui.relayText.textContent = text;
+  if (ui.relayDot) {
+    ui.relayDot.className = 'status-indicator' + (isOnline ? '' : ' offline');
+  }
+  if (ui.relayText) {
+    ui.relayText.textContent = text;
+  }
 }
 
 function logTelemetry(msg) {
@@ -507,3 +511,4 @@ function registerServiceWorker() {
       .catch((e) => console.log('SW Note:', e.message));
   }
 }
+

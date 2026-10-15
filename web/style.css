@@ -16,7 +16,7 @@
   /* Borders & Hairlines */
   --border-subtle: 1px solid rgba(0, 0, 0, 0.05);
   --border-card: 1px solid rgba(0, 0, 0, 0.04);
-  --border-focus: 1.5px solid #2563EB;
+  --border-focus: 1.5px solid #6F92B3;
 
   /* Typography */
   --font-heading: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -28,19 +28,19 @@
   --text-muted: #6B7280;
   --text-dim: #9CA3AF;
 
-  /* Primary Accent: 3D Royal Cobalt (Tactile Capsule) */
-  --accent-gradient: linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%);
-  --accent-solid: #2563EB;
-  --accent-light: #EFF6FF;
-  --accent-border: #BFDBFE;
+  /* Primary Accent: Slate Aeroblue (#6F92B3) */
+  --accent-gradient: linear-gradient(180deg, #8DA9C3 0%, #487299 100%);
+  --accent-solid: #6F92B3;
+  --accent-light: #F0F4F8;
+  --accent-border: #C8D7E5;
 
   /* Soft Diffuse Shadows & Tactile Button (Iconly Reference Style) */
   --shadow-card: 0 12px 30px -4px rgba(0, 0, 0, 0.04),
                  0 2px 8px -2px rgba(0, 0, 0, 0.02);
-  --shadow-primary-btn: 0 8px 20px -2px rgba(37, 99, 235, 0.32),
+  --shadow-primary-btn: 0 8px 20px -2px rgba(111, 146, 179, 0.35),
                         inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
                         inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18);
-  --shadow-primary-btn-hover: 0 12px 28px -2px rgba(37, 99, 235, 0.42),
+  --shadow-primary-btn-hover: 0 12px 28px -2px rgba(111, 146, 179, 0.45),
                               inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
                               inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18);
 
@@ -937,3 +937,4 @@ html, body {
     padding: 24px 22px;
   }
 }
+
