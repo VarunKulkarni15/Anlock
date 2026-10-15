@@ -27,6 +27,8 @@ const state = {
 const ui = {
   viewUnpaired: document.getElementById('viewUnpaired'),
   viewPaired: document.getElementById('viewPaired'),
+  heroCard: document.getElementById('heroCard'),
+  onboardingIntro: document.getElementById('onboardingIntro'),
   relayPill: document.getElementById('relayStatusChip'),
   relayDot: document.getElementById('statusIndicator'),
   relayText: document.getElementById('statusCaption'),
@@ -111,11 +113,11 @@ function showPairedView() {
   ui.viewUnpaired.style.display = 'none';
   ui.viewPaired.style.display = 'block';
 
-  const d = state.pairedDevice;
-  ui.pairedDeviceName.textContent = d.deviceName || 'Windows PC';
-  ui.pairedUserText.textContent = `Account: ${d.userName || 'Administrator'}`;
-  ui.pairedLocationText.textContent = d.pairingMethod || 'Cloud Relay';
-  ui.cfgDeviceId.value = d.id || 'N/A';
+  const d = state.pairedDevice || {};
+  if (ui.pairedDeviceName) ui.pairedDeviceName.textContent = d.deviceName || 'Windows PC';
+  if (ui.pairedUserText) ui.pairedUserText.textContent = `Account: ${d.userName || 'Administrator'}`;
+  if (ui.pairedLocationText) ui.pairedLocationText.textContent = d.pairingMethod || 'Cloud Relay';
+  if (ui.cfgDeviceId) ui.cfgDeviceId.value = d.id || 'N/A';
 
   joinDeviceChannel();
 }
@@ -363,41 +365,64 @@ function executeTestUnlock() {
 // 5. CAMERA QR SCANNER & MANUAL CODE PAIRING
 // ==========================================================================
 function startQRScanner() {
-  ui.qrScannerBox.style.display = 'block';
-  ui.btnStartScan.style.display = 'none';
+  if (ui.onboardingIntro) ui.onboardingIntro.style.display = 'none';
+  if (ui.heroCard) ui.heroCard.classList.add('scanning-mode');
+  if (ui.btnStartScan) ui.btnStartScan.style.display = 'none';
+  if (ui.qrScannerBox) ui.qrScannerBox.style.display = 'block';
 
   if (typeof Html5Qrcode === 'undefined') {
-    alert('QR scanner library is loading. Please try again in a second.');
+    showToast('QR scanner library is still loading...');
+    stopQRScanner();
     return;
   }
 
-  state.qrScanner = new Html5Qrcode('qrReader');
-  state.qrScanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 220, height: 220 } },
-    (decodedText) => {
-      // Scanned successfully!
-      stopQRScanner();
-      handleScannedData(decodedText);
-    },
-    (errorMessage) => {
-      // Searching for QR...
-    }
-  ).catch(err => {
-    alert('Camera permission denied or camera not available. You can use the manual pairing code below.');
-    stopQRScanner();
-  });
+  try {
+    state.qrScanner = new Html5Qrcode('qrReader');
+    state.qrScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 180, height: 180 } },
+      (decodedText) => {
+        // Scanned successfully!
+        stopQRScanner();
+        handleScannedData(decodedText);
+      },
+      (errorMessage) => {
+        // Searching for QR...
+      }
+    ).catch(err => {
+      console.warn('Camera error:', err);
+      showToast('Camera note: ' + (err.message || 'Permission denied'));
+    });
+  } catch (err) {
+    console.error('Html5Qrcode init error:', err);
+    showToast('Camera error: ' + (err.message || ''));
+  }
 }
 
 function stopQRScanner() {
+  // Always update UI immediately for instant feedback
+  if (ui.qrScannerBox) ui.qrScannerBox.style.display = 'none';
+  if (ui.btnStartScan) ui.btnStartScan.style.display = '';
+  if (ui.onboardingIntro) ui.onboardingIntro.style.display = '';
+  if (ui.heroCard) ui.heroCard.classList.remove('scanning-mode');
+
   if (state.qrScanner) {
-    state.qrScanner.stop().then(() => {
-      state.qrScanner.clear();
-      state.qrScanner = null;
-    }).catch(() => {});
+    const scanner = state.qrScanner;
+    state.qrScanner = null;
+    try {
+      if (scanner.isScanning) {
+        scanner.stop().then(() => {
+          try { scanner.clear(); } catch(e) {}
+        }).catch(() => {
+          try { scanner.clear(); } catch(e) {}
+        });
+      } else {
+        try { scanner.clear(); } catch(e) {}
+      }
+    } catch (e) {
+      try { scanner.clear(); } catch(err) {}
+    }
   }
-  ui.qrScannerBox.style.display = 'none';
-  ui.btnStartScan.style.display = 'inline-flex';
 }
 
 function handleScannedData(qrContent) {
@@ -471,11 +496,13 @@ function closeSettingsModal() {
 }
 
 function updateRelayStatus(isOnline, text) {
-  if (ui.relayDot) {
-    ui.relayDot.className = 'status-indicator' + (isOnline ? '' : ' offline');
+  const dot = (ui && ui.relayDot) || document.getElementById('statusIndicator');
+  const caption = (ui && ui.relayText) || document.getElementById('statusCaption');
+  if (dot) {
+    dot.className = 'status-indicator' + (isOnline ? '' : ' offline');
   }
-  if (ui.relayText) {
-    ui.relayText.textContent = text;
+  if (caption) {
+    caption.textContent = text;
   }
 }
 

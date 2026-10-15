@@ -252,12 +252,39 @@ html, body {
   align-items: center;
   text-align: center;
   gap: 16px;
-  padding: 30px 22px 26px 22px;
+  padding: 26px 20px 22px 20px;
+  transition: padding 0.25s ease, gap 0.25s ease;
+}
+
+.hero-onboarding-card.scanning-mode {
+  padding: 16px 16px 20px 16px;
+  gap: 12px;
+}
+
+.onboarding-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  width: 100%;
+  animation: introFadeIn 0.22s ease-out;
+}
+
+@keyframes introFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .onboarding-icon-wrap {
-  width: 68px;
-  height: 68px;
+  width: 64px;
+  height: 64px;
   border-radius: 20px;
   background: var(--bg-inset);
   color: var(--text-main);
@@ -272,11 +299,11 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .onboarding-actions > * + * {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
 .subtle-divider {
@@ -287,7 +314,7 @@ html, body {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin: 4px 0;
+  margin: 2px 0;
 }
 
 .subtle-divider::before, .subtle-divider::after {
@@ -326,41 +353,113 @@ html, body {
 .soft-input:focus {
   background: #FFFFFF;
   border-color: var(--accent-solid);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 3px rgba(111, 146, 179, 0.18);
 }
 
 .qr-camera-viewport {
   width: 100%;
-  background: #000000;
+  background: #0f172a;
   border-radius: 18px;
   overflow: hidden;
-  padding: 12px;
-  margin: 0;
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.25);
+  padding: 10px 10px 12px 10px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(111, 146, 179, 0.25);
   box-sizing: border-box;
+  animation: qrFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes qrFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .qr-camera-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #FFFFFF;
+  padding: 4px 6px 10px 6px;
+}
+
+.qr-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qr-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: pulseDot 1.5s infinite;
+}
+
+.qr-header-title {
   font-size: 0.78rem;
-  margin-bottom: 8px;
+  font-weight: 600;
+  color: #F8FAFC;
+  letter-spacing: -0.01em;
 }
 
 .text-action-btn {
-  background: transparent;
-  border: none;
-  color: #38BDF8;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FFFFFF;
+  font-size: 0.75rem;
   font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.text-action-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.text-action-btn:active {
+  transform: scale(0.95);
 }
 
 .qr-render-area {
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
+  position: relative;
+  background: #000000;
+  height: 220px;
+  max-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-render-area video {
+  width: 100% !important;
+  height: 220px !important;
+  max-height: 220px !important;
+  object-fit: cover !important;
+  border-radius: 12px;
+}
+
+#qrReader {
+  border: none !important;
+  width: 100% !important;
+}
+
+#qrReader__scan_region {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#qrReader img {
+  display: none !important;
 }
 
 /* Info Bullet Card */

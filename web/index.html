@@ -21,7 +21,7 @@
   <!-- HTML5 QR Code Scanner -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=6">
   <link rel="manifest" href="manifest.json">
 </head>
 
@@ -69,21 +69,35 @@
            ========================================== -->
       <section class="state-container" id="viewUnpaired">
 
-        <div class="soft-card hero-onboarding-card">
-          <div class="onboarding-icon-wrap">
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
+        <div class="soft-card hero-onboarding-card" id="heroCard">
+          <div class="onboarding-intro" id="onboardingIntro">
+            <div class="onboarding-icon-wrap">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+
+            <h1 class="card-heading">Pair Your Windows PC</h1>
+            <p class="card-description">Link this mobile device with Anlock Desktop to unlock Windows with your phone
+              fingerprint, face, or PIN.</p>
           </div>
 
-          <h1 class="card-heading">Pair Your Windows PC</h1>
-          <p class="card-description">Link this mobile device with Anlock Desktop to unlock Windows with your phone
-            fingerprint, face, or PIN.</p>
+          <!-- Camera QR Scanner Viewport (Replaces the intro when active, right at the top) -->
+          <div class="qr-camera-viewport" id="qrScannerBox" style="display: none;">
+            <div class="qr-camera-header">
+              <div class="qr-header-left">
+                <span class="qr-pulse-dot"></span>
+                <span class="qr-header-title">Align camera with PC screen</span>
+              </div>
+              <button class="text-action-btn" id="btnCloseScanner" type="button">Cancel</button>
+            </div>
+            <div id="qrReader" class="qr-render-area"></div>
+          </div>
 
-          <div class="onboarding-actions">
+          <div class="onboarding-actions" id="onboardingActions">
             <button class="capsule-primary-btn" id="btnStartScan">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -95,15 +109,6 @@
               </svg>
               <span>Scan QR Code on PC</span>
             </button>
-
-            <!-- Camera QR Scanner Viewport (Appears above pairing code, replacing scan button) -->
-            <div class="qr-camera-viewport" id="qrScannerBox" style="display: none;">
-              <div class="qr-camera-header">
-                <span>Align camera with PC screen</span>
-                <button class="text-action-btn" id="btnCloseScanner">Cancel</button>
-              </div>
-              <div id="qrReader" class="qr-render-area"></div>
-            </div>
 
             <div class="subtle-divider">
               <span>or enter pairing code</span>
@@ -279,7 +284,7 @@
 
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=6"></script>
 </body>
 
 </html>
