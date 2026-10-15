@@ -771,21 +771,55 @@ html, body {
   opacity: 1;
 }
 
-/* Desktop Responsiveness */
+/* ==========================================================================
+   MOBILE & DESKTOP RESPONSIVENESS
+   ========================================================================== */
+@media (max-width: 767px) {
+  html, body {
+    background-color: #EFF1F5;
+  }
+  .app-layout {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)) 16px;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    margin: 0;
+  }
+  .soft-card {
+    border-radius: 22px;
+    padding: 20px 18px;
+  }
+  .hero-onboarding-card {
+    padding: 28px 18px;
+  }
+  .capsule-primary-btn {
+    padding: 16px 20px;
+    font-size: 1rem;
+  }
+  .soft-input {
+    font-size: 16px; /* Prevents auto-zoom on mobile inputs */
+  }
+}
+
 @media (min-width: 768px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
+    background-color: var(--bg-canvas);
   }
   .app-layout {
-    width: 430px;
+    width: 420px;
     min-height: auto;
-    border-radius: 36px;
+    border-radius: 32px;
     border: var(--border-card);
     background: #FFFFFF;
-    box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.08);
-    margin: 40px 0;
-    padding: 24px 22px 110px 22px;
+    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.08);
+    margin: 40px auto;
+    padding: 24px 22px 32px 22px;
   }
 }

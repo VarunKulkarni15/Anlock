@@ -1,0 +1,14 @@
+{
+  "name": "anlock-desktop",
+  "version": "1.0.0",
+  "description": "Anlock Desktop Companion & Supabase Realtime Bridge for Windows",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0",
+    "qrcode": "^1.5.4"
+  }
+}
