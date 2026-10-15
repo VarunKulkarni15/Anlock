@@ -1,0 +1,993 @@
+/* ==========================================================================
+   ANLOCK — TRUE LIQUID GLASS DESIGN SYSTEM
+   Palette: Electric Cyan & Deep Obsidian Slate
+   Zero-Knowledge Biometric Authentication
+   ========================================================================== */
+
+:root {
+  /* Color Tokens */
+  --bg-space: #05080d;
+  --bg-deep: #090e17;
+  --bg-surface: rgba(12, 19, 31, 0.65);
+  --bg-surface-elevated: rgba(18, 29, 48, 0.72);
+  
+  /* Electric Cyan Tokens (User strictly hates purple/pink) */
+  --cyan-primary: #00f2fe;
+  --cyan-glow: #06b6d4;
+  --cyan-bright: #22d3ee;
+  --cyan-deep: #0891b2;
+  --cyan-subtle: rgba(6, 182, 212, 0.14);
+  --cyan-border: rgba(34, 211, 238, 0.35);
+
+  /* Typography Colors */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --text-cipher: #38bdf8;
+
+  /* Liquid Glass Specular & Refraction Tokens */
+  --glass-blur: 28px;
+  --glass-specular: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(34, 211, 238, 0.25) 25%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  --glass-border: 1px solid rgba(255, 255, 255, 0.12);
+  --glass-inner-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2),
+                        inset 0 -1px 2px 0 rgba(0, 0, 0, 0.6);
+  --liquid-caustic-shadow: 0 20px 50px -10px rgba(0, 242, 254, 0.18),
+                           0 10px 20px -5px rgba(0, 0, 0, 0.6);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 9999px;
+
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-space);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   AMBIENT LIQUID BACKGROUND (Floating Caustics)
+   ========================================================================== */
+.ambient-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.liquid-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.orb-primary {
+  width: 480px;
+  height: 480px;
+  top: -80px;
+  right: -80px;
+  background: radial-gradient(circle, #00f2fe 0%, #06b6d4 40%, rgba(6, 182, 212, 0) 75%);
+  animation: floatPrimary 16s ease-in-out infinite alternate;
+}
+
+.orb-secondary {
+  width: 420px;
+  height: 420px;
+  bottom: -60px;
+  left: -80px;
+  background: radial-gradient(circle, #0284c7 0%, #0369a1 45%, rgba(3, 105, 161, 0) 75%);
+  animation: floatSecondary 20s ease-in-out infinite alternate;
+}
+
+.orb-ambient {
+  width: 320px;
+  height: 320px;
+  top: 40%;
+  left: 30%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.25) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 70%);
+  animation: pulseAmbient 10s ease-in-out infinite alternate;
+}
+
+.mesh-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 85%);
+}
+
+@keyframes floatPrimary {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-60px, 80px) scale(1.12); }
+  100% { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+@keyframes floatSecondary {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(70px, -60px) scale(1.08); }
+  100% { transform: translate(40px, -30px) scale(0.92); }
+}
+
+@keyframes pulseAmbient {
+  0% { transform: scale(0.9); opacity: 0.25; }
+  100% { transform: scale(1.25); opacity: 0.55; }
+}
+
+/* ==========================================================================
+   VIEWPORT WRAPPER
+   ========================================================================== */
+.app-viewport {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px 32px 20px;
+  gap: 20px;
+}
+
+/* ==========================================================================
+   NAVIGATION BAR
+   ========================================================================== */
+.liquid-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  border-radius: var(--radius-lg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-inner-shadow), 0 8px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--glass-specular);
+  pointer-events: none;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-liquid-glyph {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glyph-core {
+  position: relative;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.3) 0%, rgba(6, 182, 212, 0.1) 100%);
+  border: 1px solid var(--cyan-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan-primary);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.glyph-glow {
+  position: absolute;
+  inset: 2px;
+  background: var(--cyan-primary);
+  border-radius: 10px;
+  filter: blur(10px);
+  opacity: 0.6;
+  z-index: 1;
+  animation: pulseGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.3; transform: scale(0.9); }
+  100% { opacity: 0.75; transform: scale(1.1); }
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ffffff 40%, var(--cyan-bright) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-version {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--cyan-glow);
+  font-weight: 500;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  color: var(--text-main);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 8px var(--cyan-primary);
+  animation: blink 2s infinite ease-in-out;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-ping {
+  font-family: var(--font-mono);
+  color: var(--cyan-bright);
+  font-size: 0.68rem;
+}
+
+.icon-liquid-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-liquid-btn:hover {
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--cyan-bright);
+  border-color: var(--cyan-border);
+  transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   LIQUID GLASS CARD
+   ========================================================================== */
+.liquid-card {
+  position: relative;
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--glass-blur)) saturate(190%) contrast(105%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%) contrast(105%);
+  border-radius: var(--radius-lg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-inner-shadow), var(--liquid-caustic-shadow);
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-specular-edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--glass-specular);
+  pointer-events: none;
+}
+
+.card-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Device Card Spec */
+.device-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.device-icon-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.15) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border: 1px solid var(--cyan-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan-bright);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.25);
+}
+
+.pulse-indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  border: 2px solid var(--bg-deep);
+  box-shadow: 0 0 10px var(--cyan-primary);
+}
+
+.device-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.device-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.device-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.device-loc-tag {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  color: var(--cyan-bright);
+  background: rgba(6, 182, 212, 0.1);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.device-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.dot-sep {
+  color: var(--text-dim);
+}
+
+.auth-event-badge {
+  color: var(--cyan-glow);
+  font-weight: 600;
+}
+
+/* Security Bar */
+.security-chip-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.chip-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.chip-hash {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-cipher);
+  letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   BIOMETRIC SCANNER ZONE (Interactive True Liquid Glass Refraction)
+   ========================================================================== */
+.biometric-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 0 16px 0;
+  gap: 24px;
+}
+
+.scanner-container {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Liquid Ripple Rings */
+.liquid-ripple-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ring-1 {
+  inset: 12px;
+  border: 1px solid rgba(34, 211, 238, 0.25);
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.12);
+  animation: ringPulse1 4s ease-in-out infinite;
+}
+
+.ring-2 {
+  inset: 0px;
+  border: 1px dashed rgba(6, 182, 212, 0.2);
+  animation: ringRotate 24s linear infinite;
+}
+
+.ring-3 {
+  inset: -14px;
+  border: 1px solid rgba(34, 211, 238, 0.08);
+  animation: ringPulse3 6s ease-in-out infinite alternate;
+}
+
+@keyframes ringPulse1 {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.04); opacity: 0.8; }
+}
+
+@keyframes ringRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ringPulse3 {
+  0% { transform: scale(0.96); opacity: 0.2; }
+  100% { transform: scale(1.05); opacity: 0.6; }
+}
+
+/* Sensor Button (Liquid Glass Sphere / Lens) */
+.liquid-sensor-btn {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    rgba(34, 211, 238, 0.22) 0%,
+    rgba(12, 24, 42, 0.8) 55%,
+    rgba(5, 11, 20, 0.95) 100%
+  );
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    inset 0 3px 5px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.8),
+    0 15px 35px -5px rgba(0, 242, 254, 0.3),
+    0 0 50px rgba(6, 182, 212, 0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan-bright);
+  outline: none;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.liquid-sensor-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 
+    inset 0 4px 8px rgba(255, 255, 255, 0.6),
+    inset 0 -4px 12px rgba(0, 0, 0, 0.8),
+    0 20px 45px -5px rgba(0, 242, 254, 0.45),
+    0 0 60px rgba(6, 182, 212, 0.3);
+  border-color: rgba(34, 211, 238, 0.5);
+}
+
+.liquid-sensor-btn:active, .liquid-sensor-btn.scanning {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.9),
+    0 0 30px rgba(0, 242, 254, 0.6);
+}
+
+.sensor-specular-light {
+  position: absolute;
+  top: 8px;
+  left: 20px;
+  width: 50px;
+  height: 25px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 80%);
+  border-radius: 50%;
+  transform: rotate(-30deg);
+  pointer-events: none;
+}
+
+.sensor-inner-liquid {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(0, 242, 254, 0.2) 0%, transparent 70%);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: liquidGleam 5s ease-in-out infinite alternate;
+}
+
+@keyframes liquidGleam {
+  0% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
+  100% { transform: scale(1.15) rotate(180deg); opacity: 0.7; }
+}
+
+.sensor-glyph {
+  position: relative;
+  z-index: 2;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fingerprint-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+}
+
+.sensor-success-glyph {
+  position: absolute;
+  z-index: 3;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+/* Success State Triggered */
+.liquid-sensor-btn.unlocked {
+  border-color: #22d3ee;
+  box-shadow: 0 0 60px rgba(34, 211, 238, 0.8), inset 0 0 20px rgba(34, 211, 238, 0.5);
+}
+
+.liquid-sensor-btn.unlocked .sensor-glyph {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.liquid-sensor-btn.unlocked .sensor-success-glyph {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Scanner Text */
+.scanner-status-box {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  transition: color 0.3s ease;
+}
+
+.status-subtext {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   ACTION BUTTONS GRID
+   ========================================================================== */
+.controls-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.liquid-action-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.btn-sheen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--glass-specular);
+}
+
+.primary-action {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(6, 182, 212, 0.08) 100%);
+  border: 1px solid var(--cyan-border);
+  color: var(--cyan-bright);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 8px 20px rgba(0, 242, 254, 0.15);
+}
+
+.primary-action:hover {
+  background: linear-gradient(135deg, rgba(0, 242, 254, 0.3) 0%, rgba(6, 182, 212, 0.15) 100%);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3), 0 10px 25px rgba(0, 242, 254, 0.25);
+  transform: translateY(-2px);
+}
+
+.remote-lock-action {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+.remote-lock-action:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   TELEMETRY DRAWER (Zero-Knowledge Terminal View)
+   ========================================================================== */
+.telemetry-card {
+  margin-top: auto;
+}
+
+.telemetry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.telemetry-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.telemetry-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 6px var(--cyan-primary);
+}
+
+.telemetry-toggle-hint {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.telemetry-content {
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.telemetry-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.telemetry-content::-webkit-scrollbar-thumb {
+  background: rgba(34, 211, 238, 0.2);
+  border-radius: 4px;
+}
+
+.log-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.log-time {
+  color: var(--text-dim);
+}
+
+.log-row.info .log-msg { color: var(--text-muted); }
+.log-row.cipher .log-msg { color: var(--cyan-bright); }
+.log-row.ok .log-msg { color: #34d399; }
+.log-row.warn .log-msg { color: #f59e0b; }
+
+/* ==========================================================================
+   MODAL DIALOG
+   ========================================================================== */
+.liquid-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.liquid-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 7, 14, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.modal-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface-elevated);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border-radius: var(--radius-lg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-inner-shadow), 0 25px 60px rgba(0, 0, 0, 0.6);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform: translateY(20px) scale(0.96);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-modal.open .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.close-btn {
+  font-size: 1rem;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.setting-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mode-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mode-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mode-chip.active {
+  background: rgba(6, 182, 212, 0.15);
+  border-color: var(--cyan-border);
+  color: var(--cyan-bright);
+}
+
+.mode-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.liquid-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.liquid-input:focus {
+  border-color: var(--cyan-bright);
+}
+
+.setting-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.18);
+  border-radius: 10px;
+  font-size: 0.72rem;
+  color: var(--cyan-bright);
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATION
+   ========================================================================== */
+.toast-notification {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(12, 24, 42, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--cyan-border);
+  box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--cyan-bright);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 200;
+}
+
+.toast-notification.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   DESKTOP / WIDE SCREEN RESPONSIVENESS
+   ========================================================================== */
+@media (min-width: 768px) {
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .app-viewport {
+    width: 440px;
+    min-height: auto;
+    border-radius: 36px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(6, 12, 22, 0.75);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 100px rgba(0, 242, 254, 0.1);
+    padding: 24px;
+    margin: 30px 0;
+  }
+}
