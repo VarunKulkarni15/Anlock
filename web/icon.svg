@@ -1,38 +1,39 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
   <defs>
-    <radialGradient id="bgGleam" cx="30%" cy="25%" r="75%">
-      <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.3"/>
-      <stop offset="50%" stop-color="#091424" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="#05080d" stop-opacity="1"/>
-    </radialGradient>
-    <linearGradient id="specularRim" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0.9"/>
-      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.6"/>
-      <stop offset="70%" stop-color="#06b6d4" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#0891b2" stop-opacity="0.5"/>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EFF1F5"/>
     </linearGradient>
-    <filter id="cyanGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="14" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    <linearGradient id="cobaltGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.08"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#2563EB" flood-opacity="0.12"/>
     </filter>
   </defs>
 
-  <!-- Base Rounded Plate -->
-  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#bgGleam)" stroke="url(#specularRim)" stroke-width="6"/>
+  <!-- Porcelain Squircle Canvas Base -->
+  <rect x="24" y="24" width="464" height="464" rx="112" fill="url(#bgGrad)" stroke="rgba(0,0,0,0.06)" stroke-width="4" filter="url(#softShadow)"/>
 
-  <!-- Specular inner rim -->
-  <rect x="36" y="36" width="440" height="440" rx="100" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+  <!-- Subtle Specular Inner Rim -->
+  <rect x="36" y="36" width="440" height="440" rx="100" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="3"/>
 
-  <!-- Lock Body -->
-  <g filter="url(#cyanGlow)" transform="translate(136, 136)">
+  <!-- Icon Symbol: Modern Padlock & Biometric Arc -->
+  <g transform="translate(136, 116)">
     <!-- Shackle -->
-    <path d="M48 110 V70 C48 30 78 0 120 0 C162 0 192 30 192 70 V110" fill="none" stroke="#22d3ee" stroke-width="24" stroke-linecap="round"/>
+    <path d="M44 130 V80 C44 35.8 79.8 0 120 0 C160.2 0 196 35.8 196 80 V130" 
+          fill="none" stroke="#2563EB" stroke-width="26" stroke-linecap="round"/>
     
     <!-- Lock Base -->
-    <rect x="20" y="100" width="200" height="140" rx="36" fill="#0c1728" stroke="#00f2fe" stroke-width="12"/>
+    <rect x="16" y="116" width="208" height="156" rx="36" fill="url(#cobaltGrad)"/>
     
-    <!-- Fingerprint / Biometric Center Dot -->
-    <circle cx="120" cy="170" r="16" fill="#00f2fe"/>
-    <path d="M120 170 V196" stroke="#00f2fe" stroke-width="12" stroke-linecap="round"/>
+    <!-- Biometric Keyhole / Dot -->
+    <circle cx="120" cy="180" r="16" fill="#FFFFFF"/>
+    <path d="M120 196 V224" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
+    
+    <!-- Biometric Side Waves -->
+    <path d="M84 186 C84 166 100 150 120 150 C140 150 156 166 156 186" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="7" stroke-linecap="round"/>
   </g>
 </svg>

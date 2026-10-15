@@ -33,25 +33,20 @@
   --accent-solid: #2563EB;
   --accent-light: #EFF6FF;
   --accent-border: #BFDBFE;
-  
-  /* Dynamic 3D Glow Bloom System */
-  --glow-intensity: 0.40;
-  --glow-blur: 28px;
-  --glow-spread: -4px;
-  --glow-y: 12px;
-  --glow-color: 37, 99, 235;
-  --accent-bloom: 0 var(--glow-y) var(--glow-blur) var(--glow-spread) rgba(var(--glow-color), var(--glow-intensity)),
-                  0 4px 12px -2px rgba(var(--glow-color), calc(var(--glow-intensity) * 0.75));
 
-  /* Soft Diffuse Shadows (Iconly Reference Style) */
+  /* Soft Diffuse Shadows & Tactile Button (Iconly Reference Style) */
   --shadow-card: 0 12px 30px -4px rgba(0, 0, 0, 0.04),
                  0 2px 8px -2px rgba(0, 0, 0, 0.02);
-  --shadow-tactile-btn: inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
-                        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.2);
+  --shadow-primary-btn: 0 8px 20px -2px rgba(37, 99, 235, 0.32),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+                        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18);
+  --shadow-primary-btn-hover: 0 12px 28px -2px rgba(37, 99, 235, 0.42),
+                              inset 0 1px 1px 0 rgba(255, 255, 255, 0.45),
+                              inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18);
 
   /* Radii */
-  --radius-card: 26px;
-  --radius-btn: 18px;
+  --radius-card: 24px;
+  --radius-btn: 16px;
   --radius-pill: 9999px;
 }
 
@@ -193,13 +188,20 @@ html, body {
 .content-flow {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .state-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+}
+
+/* Guaranteed vertical separation between cards across all mobile browsers */
+.content-flow > * + *,
+.state-container > * + *,
+.soft-card + .soft-card {
+  margin-top: 16px !important;
 }
 
 /* Soft Pure-White Card Base */
@@ -250,7 +252,7 @@ html, body {
   align-items: center;
   text-align: center;
   gap: 16px;
-  padding: 32px 24px;
+  padding: 30px 22px 26px 22px;
 }
 
 .onboarding-icon-wrap {
@@ -271,6 +273,10 @@ html, body {
   flex-direction: column;
   gap: 12px;
   margin-top: 6px;
+}
+
+.onboarding-actions > * + * {
+  margin-top: 10px;
 }
 
 .subtle-divider {
@@ -297,19 +303,24 @@ html, body {
 .input-action-row {
   display: flex;
   gap: 8px;
+  width: 100%;
+  align-items: stretch;
 }
 
 .soft-input {
-  flex: 1;
-  padding: 12px 16px;
+  flex: 1 1 0%;
+  min-width: 0;
+  width: 0;
+  padding: 12px 14px;
   background: var(--bg-inset);
   border: 1px solid transparent;
   border-radius: var(--radius-btn);
   font-family: var(--font-body);
-  font-size: 0.88rem;
+  font-size: 15px;
   color: var(--text-main);
   outline: none;
   transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .soft-input:focus {
@@ -614,8 +625,8 @@ html, body {
   font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--shadow-tactile-btn), var(--accent-bloom);
-  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-primary-btn);
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   outline: none;
 }
 
@@ -624,16 +635,18 @@ html, body {
 }
 
 .capsule-primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-tactile-btn), 0 16px 32px -4px rgba(37, 99, 235, 0.45);
+  transform: translateY(-1.5px);
+  box-shadow: var(--shadow-primary-btn-hover);
 }
 
 .capsule-primary-btn:active {
-  transform: translateY(0);
+  transform: translateY(0.5px) scale(0.99);
 }
 
 .pill-btn-secondary {
-  padding: 12px 20px;
+  flex: 0 0 auto;
+  min-width: fit-content;
+  padding: 12px 18px;
   border-radius: var(--radius-btn);
   background: #FFFFFF;
   border: var(--border-subtle);
@@ -644,6 +657,11 @@ html, body {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   transition: all 0.15s ease;
+  white-space: nowrap;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pill-btn-secondary:hover {
@@ -772,54 +790,150 @@ html, body {
 }
 
 /* ==========================================================================
-   MOBILE & DESKTOP RESPONSIVENESS
+   MOBILE & SCREEN RESPONSIVENESS
    ========================================================================== */
+
+/* Universal mobile adjustments (< 768px) */
 @media (max-width: 767px) {
   html, body {
-    background-color: #EFF1F5;
+    background-color: var(--bg-canvas);
+    overflow-x: hidden;
   }
+  
   .app-layout {
     width: 100%;
     max-width: 100%;
     min-height: 100dvh;
-    padding: max(16px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)) 16px;
-    border-radius: 0;
-    box-shadow: none;
-    background: transparent;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
     margin: 0;
+    gap: 16px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
   }
+
+  .content-flow > * + *,
+  .state-container > * + *,
+  .soft-card + .soft-card {
+    margin-top: 16px !important;
+  }
+
   .soft-card {
     border-radius: 22px;
-    padding: 20px 18px;
+    padding: 20px 16px;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.04), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
   }
+
   .hero-onboarding-card {
-    padding: 28px 18px;
+    padding: 28px 18px 24px 18px;
+    gap: 14px;
   }
+
+  .input-action-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .input-action-row .soft-input {
+    flex: 1 1 0%;
+    min-width: 0;
+    width: 0;
+    min-height: 48px;
+    font-size: 16px; /* Prevents auto-zoom in iOS Safari / Android Chrome */
+    padding: 12px 14px;
+  }
+
+  .input-action-row .pill-btn-secondary {
+    flex: 0 0 auto;
+    min-height: 48px;
+    padding: 0 18px;
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
   .capsule-primary-btn {
-    padding: 16px 20px;
-    font-size: 1rem;
+    min-height: 52px;
+    padding: 15px 20px;
+    font-size: 0.98rem;
+    width: 100%;
   }
-  .soft-input {
-    font-size: 16px; /* Prevents auto-zoom on mobile inputs */
+
+  .icon-circle-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .brand-badge {
+    width: 42px;
+    height: 42px;
+  }
+
+  .control-item {
+    padding: 14px 12px;
+    gap: 10px;
   }
 }
 
+/* Compact phones (e.g. iPhone SE, <= 340px) */
+@media (max-width: 340px) {
+  .app-layout {
+    padding: max(12px, env(safe-area-inset-top)) 10px max(20px, env(safe-area-inset-bottom)) 10px;
+    gap: 12px;
+  }
+
+  .soft-card {
+    padding: 16px 12px;
+    border-radius: 18px;
+  }
+
+  .card-heading {
+    font-size: 1.15rem;
+  }
+
+  .input-action-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .input-action-row .pill-btn-secondary {
+    width: 100%;
+  }
+
+  .quick-controls-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+/* Desktop and Tablet (> 768px): Clean centered column on porcelain canvas */
 @media (min-width: 768px) {
   body {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    min-height: 100dvh;
     background-color: var(--bg-canvas);
+    padding: 32px 16px;
   }
+
   .app-layout {
-    width: 420px;
+    width: 100%;
+    max-width: 430px;
     min-height: auto;
-    border-radius: 32px;
-    border: var(--border-card);
-    background: #FFFFFF;
-    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.08);
-    margin: 40px auto;
-    padding: 24px 22px 32px 22px;
+    margin: 0 auto;
+    padding: 0;
+    gap: 16px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .soft-card {
+    border-radius: 26px;
+    padding: 24px 22px;
   }
 }

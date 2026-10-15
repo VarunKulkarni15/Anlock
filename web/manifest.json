@@ -1,11 +1,11 @@
 {
-  "name": "Anlock — Liquid Biometric PC Unlock",
+  "name": "Anlock — PC Biometric Unlock",
   "short_name": "Anlock",
-  "description": "Unlock your Windows PC using your phone's biometric fingerprint via Free Cloud & Local E2EE.",
+  "description": "Unlock your Windows PC using your phone's biometric fingerprint via free Supabase Realtime cloud signaling.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#05080d",
-  "theme_color": "#00f2fe",
+  "background_color": "#EFF1F5",
+  "theme_color": "#2563EB",
   "orientation": "portrait",
   "icons": [
     {
